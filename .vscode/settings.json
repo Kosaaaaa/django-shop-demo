@@ -1,5 +1,5 @@
 {
-    "python.pythonPath": "/Users/oskarkosobucki/Downloads/django-shop-demo/env/bin/python3.8",
+    "python.pythonPath": "/Users/oskarkosobucki/Documents/django-shop-demo/env/bin/python3.8",
     // "editor.formatOnSave": true,
     "python.linting.pycodestyleEnabled": true,
     "python.linting.pylintPath": "pylint",
