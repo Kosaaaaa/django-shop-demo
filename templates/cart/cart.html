@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<div class="bg-light py-3">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 mb-0">
+                <a href="{% url 'home' %}">Home</a>
+                <span class="mx-2 mb-0">/</span>
+                <strong class="text-black">Koszyk</strong>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="site-section">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-md-12">
+                <div class="site-blocks-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Zdjęcie</th>
+                                <th>Produkt</th>
+                                <th>Cena</th>
+                                <th>Ilość</th>
+                                <th>Razem</th>
+                                <th>Akcje</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in order.items.all %}
+                            <tr>
+                                <td class="product-thumbnail">
+                                    <img src="{{request.scheme}}://{{request.META.HTTP_HOST}}{{ item.product.imageURL }}" class="img-fluid">
+                                </td>
+                                <td class="product-name">
+                                    <h2 class="h5 text-black">{{ item.product.title }}</h2>
+                                    <small>Rozmiar: {{ item.size.size }}</small>
+                                    
+                                </td>
+                                <td>{{ item.product.get_price }} PLN</td>
+                                <td>
+                                    <div class="input-group mb-3" style="max-width: 120px;">
+                                        <div class="input-group-prepend">
+                                            <a href="{% url 'cart:decrease-quantity' item.id %}"
+                                                class="btn btn-outline-primary">
+                                                &minus;
+                                            </a>
+                                        </div>
+                                        <input type="text" class="form-control text-center" value="{{ item.quantity }}">
+                                        <div class="input-group-append">
+                                            <a href="{% url 'cart:increase-quantity' item.id %} "
+                                                class="btn btn-outline-primary">
+                                                &plus;
+                                            </a>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    {{ item.get_total_item_price }} PLN
+                                </td>
+                                <td>
+                                    <a href="{% url 'cart:remove-from-cart' item.id %}"
+                                        class="btn btn-primary btn-sm">X</a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colSpan='6'>
+                                    Nie masz jeszcze nic w koszyku.
+                                    <a href="{% url 'cart:product-list' %}">Kontynuj Zakupy</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        {% if order.items.count > 0 %}
+        <div class="row">
+            <div class="col-md-6">
+                <div class="row mb-5">
+                    <div class="col-md-12">
+                        <a class="btn btn-outline-primary btn-sm btn-block"
+                            href="{% url 'cart:product-list' %}">Kontynuj Zakupy</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 pl-5">
+                <div class="row justify-content-end">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-12 text-right border-bottom mb-5">
+                                <h3 class="text-black h4 text-uppercase">Suma Koszyka</h3>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3 d-flex align-items-center">
+                            <div class="col-md-12">
+                                <!-- Coupon Form -->
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    {{ form|crispy }}
+                                    <button type="submit" class="form-group btn btn-primary btn-block">
+                                        Dodaj Kupon
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row mb-3">
+                            <div class="col-md-12 text-right">
+                                <strong class="text-black">{{ order.subtotal_formatted }} PLN</strong>
+                            </div>
+                        </div>
+                        {% if order.coupon%}
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <span class="text-black">{{order.coupon.code}}</span>
+                            </div>
+                            <div class="col-md-6 text-right ">
+                                <strong class="text-black font-weight-bold">-{{ order.coupon.percent }}%</strong>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row mb-5">
+                            <div class="col-md-12 text-right">
+                                <strong class="text-black">{{ order.get_subtotal }} PLN</strong>
+                            </div>
+                        </div>
+                        {% endif %}
+
+  
+                        {% if order.shipping_method%}
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <span class="text-black">{{ order.shipping_method.provider }}</span>
+                            </div>
+                            <div class="col-md-6 text-right ">
+                                <strong class="text-black">{{ order.shipping_method.price_formatted }} PLN</strong>
+                            </div>
+                        </div>
+                        {% endif %}
+                        <div class="row mb-5">
+                            <div class="col-md-6">
+                                <span class="text-black">Razem</span>
+                            </div>
+                            <div class="col-md-6 text-right">
+                                <strong class="text-black">{{ order.get_total }} PLN</strong>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <a class="btn btn-primary btn-lg py-3 btn-block" href="{% url 'cart:checkout' %}">Zamawiam</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+
+{% endblock content %}

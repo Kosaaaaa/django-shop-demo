@@ -1,0 +1,149 @@
+{% extends "base.html" %} 
+{% load crispy_forms_tags %} 
+{% block content %}
+
+<div class="bg-light py-3">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 mb-0">
+                <a href="{% url 'home' %}">Home</a
+                ><span class="mx-2 mb-0">/</span>
+                <a href="{% url 'cart:summary' %}" class="text-black">Cart</a
+                ><span class="mx-2 mb-0">/</span>
+                <strong class="text-black">Checkout</strong>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="site-section">
+    <div class="container">
+        {% if not order.items.all.exists %}
+        <div class="row mb-5">
+            <div class="col-md-12">
+                Nie masz jeszcze nic w koszyku.
+                <a href="{% url 'cart:product-list' %}">Kontynuj Zakupy</a>
+            </div>
+        </div>
+        {% else %}
+        <form method="POST">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6 mb-5 mb-md-0" id="form-row">
+                    <h2 class="h3 mb-3 text-black text-center">
+                        Dane do Wysyłki i Płatności
+                    </h2>
+                    <hr />
+                    {{ form|crispy }}
+                    <div class="form-group">
+                        <button
+                            type="submit"
+                            class="btn btn-primary btn-lg py-3 btn-block"
+                        >
+                            Przejdź do płatnośći
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="row mb-5">
+                        <div class="col-md-12">
+                            <h2 class="h3 mb-3 text-black text-center">
+                                Twoje Zamówienie
+                            </h2>
+                            <hr />
+                            <div class="p-3 p-lg-5">
+                                <table
+                                    class="table site-block-order-table mb-5"
+                                >
+                                    <thead>
+                                        <tr>
+                                            <th>Produkt</th>
+                                            <th>Razem</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in order.items.all %}
+                                        <tr>
+                                            <td>
+                                                {{ item.product.title }} - {{item.size.size }}
+                                                <strong class="mx-2">x</strong>
+                                                {{ item.quantity }}
+                                            </td>
+                                            <td>
+                                                {{ item.get_total_item_price }}
+                                                PLN
+                                            </td>
+                                        </tr>
+                                        {% endfor %} {% if order.coupon%}
+                                        <tr>
+                                            <td>
+                                                <strong>{{ order.coupon.code}}</strong>
+                                            </td>
+                                            <td>
+                                                <strong>-{{ order.coupon.percent}}%</strong>
+                                            </td>
+                                        </tr>
+                                        {% endif %}
+                                        <tr>
+                                            <td></td>
+                                            <td>
+                                                {{ order.get_subtotal }} PLN
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <strong class="text-black font-weight-bold">
+                                                    Zamówienie Razem
+                                                </strong>
+
+                                            </td>
+                                            <td>
+                                                <strong class="text-black font-weight-bold">
+                                                    {{ order.get_total }} PLN
+                                                </strong>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        {% endif %}
+    </div>
+</div>
+<script>
+    function toggle_billing_divinputs(is_addresses_same, billing_divinputs_id) {
+        if (is_addresses_same.checked) {
+            billing_divinputs_id.map(function (id) {
+                document.getElementById(id).style.display = "none";
+            });
+        } else {
+            billing_divinputs_id.map(function (id) {
+                document.getElementById(id).style.display = "";
+            });
+        }
+    }
+    const is_addresses_same = document.getElementById("id_is_addresses_same");
+    const billing_divinputs_id = [
+        "div_id_billing_address_line_1",
+        "div_id_billing_address_line_2",
+        "div_id_billing_zip_code",
+        "div_id_billing_city",
+        "div_id_selected_billing_address",
+        "div_id_first_name_billing",
+        "div_id_last_name_billing",
+        "div_id_email_billing",
+        "div_id_phone_number_billing",
+    ];
+
+    toggle_billing_divinputs(is_addresses_same, billing_divinputs_id);
+
+    is_addresses_same.addEventListener("change", function (e) {
+        toggle_billing_divinputs(is_addresses_same, billing_divinputs_id);
+    });
+</script>
+{% endblock content %}
