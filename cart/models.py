@@ -109,13 +109,13 @@ class Product(models.Model):
     slug = models.SlugField(max_length=200, blank=True, unique=True)
 
     image = models.ImageField(blank=True, null=True,
-                              upload_to=f'product_images/{title}/')
+                              upload_to='product_images/%Y/%m/%d/')
     image_2 = models.ImageField(
-        blank=True, null=True, upload_to=f'product_images/{title}/')
+        blank=True, null=True, upload_to='product_images/%Y/%m/%d/')
     image_3 = models.ImageField(
-        blank=True, null=True, upload_to=f'product_images/{title}/')
+        blank=True, null=True, upload_to='product_images/%Y/%m/%d/')
     image_4 = models.ImageField(
-        blank=True, null=True, upload_to=f'product_images/{title}/')
+        blank=True, null=True, upload_to='product_images/%Y/%m/%d/')
 
     description = models.TextField()
     price = models.IntegerField(
