@@ -6,7 +6,7 @@ from django.shortcuts import reverse
 from django.utils.text import slugify
 from django.core.validators import MinValueValidator, MaxValueValidator
 from pipenv.vendor.backports.enum import unique
-from phonenumber_field.modelfields import PhoneNumberField
+
 User = get_user_model()
 DEFAULT_SHIPPING_ID = 1
 
@@ -58,7 +58,7 @@ class Address(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     email = models.EmailField()
-    phone_number = PhoneNumberField(blank=True, null=True)
+    phone_number = models.CharField(blank=True, null=True, max_length=12)
     address_line_1 = models.CharField(max_length=150)
     address_line_2 = models.CharField(max_length=150, blank=True, null=True)
     city = models.CharField(max_length=100)

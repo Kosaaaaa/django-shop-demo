@@ -1,7 +1,6 @@
 from django.db import models
 from django.db.models.signals import post_save
 from django.contrib.auth import get_user_model
-from phonenumber_field.modelfields import PhoneNumberField
 # from cart.models import Coupon
 User = get_user_model()
 
@@ -12,7 +11,7 @@ class Customer(models.Model):
     first_name = models.CharField(max_length=150)
     last_name = models.CharField(max_length=150)
     email = models.EmailField(unique=True)
-    phone_number = PhoneNumberField(blank=True, null=True)
+    phone_number = models.CharField(blank=True, null=True, max_length=12)
     # used_coupons = models.ManyToManyField(
     #     Coupon, related_name='user_used_coupons', blank=True)
     created = models.DateTimeField(auto_now_add=True)
