@@ -3,7 +3,6 @@ from django.template.defaultfilters import default
 from django.utils import timezone
 from django import forms
 from django.db.models import Q
-from phonenumber_field.formfields import PhoneNumberField
 from .models import (
     OrderItem, Product,
     Address, SizeVariations, Coupon
@@ -73,7 +72,7 @@ class AddressForm(forms.Form):
         max_length=150, label=LAST_NAME_LABEL, widget=forms.TextInput(attrs={'placeholder': LAST_NAME_LABEL}))
     email_shipping = forms.EmailField(label=EMAIL_LABEL, widget=forms.TextInput(
         attrs={'placeholder': EMAIL_LABEL}))
-    phone_number_shipping = PhoneNumberField(label=PHONE_NUMBER_LABEL, required=False, widget=forms.TextInput(
+    phone_number_shipping = forms.CharField(label=PHONE_NUMBER_LABEL, required=False, widget=forms.TextInput(
         attrs={'placeholder': PHONE_NUMBER_LABEL}))
 
     shipping_address_line_1 = forms.CharField(required=False, label=ADDRESS_LINE_1_LABEL, widget=forms.TextInput(
@@ -94,7 +93,7 @@ class AddressForm(forms.Form):
                                         max_length=150, label=LAST_NAME_LABEL, widget=forms.TextInput(attrs={'placeholder': LAST_NAME_LABEL}))
     email_billing = forms.EmailField(required=False, label=EMAIL_LABEL, widget=forms.TextInput(
         attrs={'placeholder': EMAIL_LABEL}))
-    phone_number_billing = PhoneNumberField(label=PHONE_NUMBER_LABEL, required=False, widget=forms.TextInput(
+    phone_number_billing = forms.CharField(label=PHONE_NUMBER_LABEL, required=False, widget=forms.TextInput(
         attrs={'placeholder': PHONE_NUMBER_LABEL}))
 
     billing_address_line_1 = forms.CharField(required=False, label=ADDRESS_LINE_1_LABEL, widget=forms.TextInput(
