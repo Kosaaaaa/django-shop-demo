@@ -2,7 +2,7 @@ from django import forms
 from pipenv.vendor import attr
 from .models import Customer
 from allauth.account.forms import SignupForm
-from phonenumber_field.formfields import PhoneNumberField
+import re
 
 
 class ContactForm(forms.Form):
@@ -30,7 +30,7 @@ class CustomerSignupForm(SignupForm):
     last_name = forms.CharField(
         max_length=150, label=LAST_NAME_LABEL, widget=forms.TextInput(attrs={'placeholder': LAST_NAME_LABEL}))
 
-    phone_number = PhoneNumberField(label=PHONE_NUMBER_LABEL, required=False, widget=forms.TextInput(
+    phone_number = forms.CharField(label=PHONE_NUMBER_LABEL, required=False, max_length=16, widget=forms.TextInput(
         attrs={'placeholder': PHONE_NUMBER_LABEL}))
 
     class Meta:
@@ -42,3 +42,13 @@ class CustomerSignupForm(SignupForm):
         user.last_name = self.cleaned_data['last_name']
         user.save()
         return user
+
+    def clean(self):
+        super().clean()
+        data = self.cleaned_data
+
+        if data.get('phone_number', None):
+            phone_number = data.get('phone_number')
+            if not re.search('((\+{1}\d{2})|(\+{0}))\d{9}', phone_number):
+                self.add_error(
+                    'phone_number', 'Błędny format numeru telefonu. Poprawny np. +48123456789 lub 123456789')

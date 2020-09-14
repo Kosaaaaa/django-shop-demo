@@ -11,7 +11,7 @@ class Customer(models.Model):
     first_name = models.CharField(max_length=150)
     last_name = models.CharField(max_length=150)
     email = models.EmailField(unique=True)
-    phone_number = models.CharField(blank=True, null=True, max_length=12)
+    phone_number = models.CharField(blank=True, null=True, max_length=16)
     # used_coupons = models.ManyToManyField(
     #     Coupon, related_name='user_used_coupons', blank=True)
     created = models.DateTimeField(auto_now_add=True)
