@@ -37,6 +37,13 @@ class AddressAdmin(admin.ModelAdmin):
     ]
 
 
+class SizeAdmin(admin.ModelAdmin):
+    list_display = [
+        'name',
+        'size_order'
+    ]
+
+
 admin.site.register(Address, AddressAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Coupon, CouponAdmin)
@@ -44,6 +51,6 @@ admin.site.register(Order)
 admin.site.register(OrderItem)
 admin.site.register(Payment)
 admin.site.register(Product)
-admin.site.register(Size)
+admin.site.register(Size, SizeAdmin)
 admin.site.register(SizeVariations, SizeVariationsAdmin)
 admin.site.register(ShippingMethod)
