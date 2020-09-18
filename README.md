@@ -1,6 +1,6 @@
 # Django E-Commerce Store <br/> By Kosaaaaa
 
-## Features <hr/>
+## Project Features <hr/>
 ### Cart App
 - ✅ Items List
 - ✅ Item Detail
