@@ -206,10 +206,6 @@ class CheckoutView(generic.FormView):
         return context
 
 
-class CheckoutAnonView(generic.FormView):
-    template_name = 'cart/checkout_anon.html'
-
-
 class PaymentView(generic.TemplateView):
     template_name = 'cart/payment.html'
 
