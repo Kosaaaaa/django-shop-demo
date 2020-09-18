@@ -117,19 +117,21 @@ class AddressForm(forms.Form):
         super().__init__(*args, **kwargs)
 
         # user = User.objects.filter(id=user_id).first()
-        customer = Customer.objects.filter(user__id=user_id).first()
+        print('user_id', user_id)
+        if user_id is not None:
+            customer = Customer.objects.filter(user__id=user_id).first()
 
-        shipping_address_qs = Address.objects.filter(
-            customer=customer,
-            address_type='S'
-        )
-        billing_address_qs = Address.objects.filter(
-            customer=customer,
-            address_type='B'
-        )
+            shipping_address_qs = Address.objects.filter(
+                customer=customer,
+                address_type='S'
+            )
+            billing_address_qs = Address.objects.filter(
+                customer=customer,
+                address_type='B'
+            )
 
-        self.fields['selected_shipping_address'].queryset = shipping_address_qs
-        self.fields['selected_billing_address'].queryset = billing_address_qs
+            self.fields['selected_shipping_address'].queryset = shipping_address_qs
+            self.fields['selected_billing_address'].queryset = billing_address_qs
 
     def clean(self):
         data = self.cleaned_data

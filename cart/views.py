@@ -142,6 +142,8 @@ class CheckoutView(generic.FormView):
             customer = Customer.objects.get(user=self.request.user)
         except Customer.DoesNotExist:
             customer = None
+        except TypeError:
+            customer = None
             # try:
             #     customer = Customer.objects.get(email=form.cleaned_data['email_shipping'])
             # except Customer.DoesNotExist:
@@ -173,7 +175,14 @@ class CheckoutView(generic.FormView):
 
         if is_addresses_same:
             address = order.shipping_address
-            order.billing_address = address
+            order.billing_address = Address.objects.create(
+                address_type='B',
+                customer=customer,
+                address_line_1=form.cleaned_data['shipping_address_line_1'],
+                address_line_2=form.cleaned_data['shipping_address_line_2'],
+                zip_code=form.cleaned_data['shipping_zip_code'],
+                city=form.cleaned_data['shipping_city'],
+            )
 
         else:
             if selected_billing_address:
